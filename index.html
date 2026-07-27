@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+
+  <title>Screen Caffeine</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: system-ui, sans-serif;
+      background: #111;
+      color: #ddd;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    header {
+      flex: 0 0 auto;
+      min-height: 180px;
+      padding: 28px 32px;
+      border-bottom: 1px solid #333;
+      background: #181818;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .description {
+      max-width: 720px;
+      margin: 0 0 24px;
+      color: #aaa;
+      line-height: 1.6;
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-label {
+      color: #888;
+    }
+
+    #status {
+      font-family: Consolas, "Courier New", monospace;
+      font-weight: 600;
+    }
+
+    #status[data-state="active"] {
+      color: #63d471;
+    }
+
+    #status[data-state="requesting"],
+    #status[data-state="waiting"] {
+      color: #e5c07b;
+    }
+
+    #status[data-state="hidden"] {
+      color: #999;
+    }
+
+    #status[data-state="error"],
+    #status[data-state="unsupported"] {
+      color: #e06c75;
+    }
+
+    main {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: auto;
+      padding: 16px 20px;
+      background: #111;
+    }
+
+    #log {
+      margin: 0;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Screen Caffeine</h1>
+
+    <p class="description">
+      Keep this page visible to prevent your screen from automatically
+      turning off or going to sleep. The page will continuously maintain
+      a screen wake lock while it remains visible.
+    </p>
+
+    <div class="status-row">
+      <span class="status-label">Current status:</span>
+      <span id="status" data-state="waiting">Waiting</span>
+    </div>
+  </header>
+
+  <main id="log-container">
+    <pre id="log"></pre>
+  </main>
+
+  <script>
+    const logElement = document.getElementById("log");
+    const logContainer = document.getElementById("log-container");
+    const statusElement = document.getElementById("status");
+
+    let wakeLock = null;
+    let requestPromise = null;
+    let retryTimer = null;
+
+    function setStatus(state, text) {
+      statusElement.dataset.state = state;
+      statusElement.textContent = text;
+    }
+
+    function log(message) {
+      const timestamp = new Date().toISOString();
+
+      logElement.textContent += `[${timestamp}] ${message}\n`;
+      logContainer.scrollTop = logContainer.scrollHeight;
+    }
+
+    function scheduleRetry(reason) {
+      if (
+        retryTimer !== null ||
+        document.visibilityState !== "visible"
+      ) {
+        return;
+      }
+
+      setStatus("waiting", "Waiting to retry");
+      log(`Scheduling retry in 1000 ms: ${reason}`);
+
+      retryTimer = window.setTimeout(() => {
+        retryTimer = null;
+        requestWakeLock("scheduled retry");
+      }, 1000);
+    }
+
+    async function requestWakeLock(reason) {
+      if (!("wakeLock" in navigator)) {
+        setStatus("unsupported", "Unsupported");
+        log("Screen Wake Lock API is not supported.");
+        return;
+      }
+
+      if (document.visibilityState !== "visible") {
+        setStatus("hidden", "Paused while hidden");
+        log(`Request skipped because document is hidden: ${reason}`);
+        return;
+      }
+
+      if (wakeLock !== null && !wakeLock.released) {
+        setStatus("active", "Active");
+        log(`Request skipped because wake lock is already active: ${reason}`);
+        return;
+      }
+
+      if (requestPromise !== null) {
+        log(`Request skipped because another request is pending: ${reason}`);
+        return requestPromise;
+      }
+
+      setStatus("requesting", "Requesting");
+      log(`Requesting screen wake lock: ${reason}`);
+
+      requestPromise = (async () => {
+        try {
+          const sentinel = await navigator.wakeLock.request("screen");
+
+          wakeLock = sentinel;
+
+          setStatus("active", "Active");
+          log("Screen wake lock acquired.");
+
+          sentinel.addEventListener(
+            "release",
+            () => {
+              log("Screen wake lock released.");
+
+              if (wakeLock === sentinel) {
+                wakeLock = null;
+              }
+
+              if (document.visibilityState === "visible") {
+                setStatus("waiting", "Released; retrying");
+                scheduleRetry("wake lock release event");
+              } else {
+                setStatus("hidden", "Paused while hidden");
+              }
+            },
+            { once: true }
+          );
+        } catch (error) {
+          const name = error?.name ?? "Error";
+          const message = error?.message ?? String(error);
+
+          setStatus("error", `${name}: ${message}`);
+          log(`Wake lock request failed: ${name}: ${message}`);
+
+          scheduleRetry("request failure");
+        } finally {
+          requestPromise = null;
+        }
+      })();
+
+      return requestPromise;
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      log(`Visibility changed: ${document.visibilityState}`);
+
+      if (document.visibilityState === "visible") {
+        requestWakeLock("document became visible");
+        return;
+      }
+
+      setStatus("hidden", "Paused while hidden");
+
+      if (retryTimer !== null) {
+        clearTimeout(retryTimer);
+        retryTimer = null;
+        log("Pending retry cancelled because document is hidden.");
+      }
+    });
+
+    window.addEventListener("pageshow", () => {
+      requestWakeLock("pageshow");
+    });
+
+    log("Page initialized.");
+    requestWakeLock("initial request");
+  </script>
+</body>
+</html>
