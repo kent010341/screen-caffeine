@@ -1,0 +1,229 @@
+:root {
+  color-scheme: dark;
+  font-family: system-ui, sans-serif;
+  background: #111;
+  background-image: url("sanufist.jpg");
+  background-size: 100% 100%;
+  color: #ddd;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+header {
+  flex: 0 0 auto;
+  padding: 28px 32px;
+  border-bottom: 1px solid #333;
+  background: #181818cc;
+}
+
+h1 {
+  margin: 0 0 12px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.description {
+  max-width: 720px;
+  margin: 0 0 24px;
+  color: #aaa;
+  line-height: 1.6;
+}
+
+.status-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin-bottom: 22px;
+}
+
+.status-label {
+  color: #888;
+}
+
+#status {
+  font-family: Consolas, "Courier New", monospace;
+  font-weight: 600;
+}
+
+#status[data-state="active"] {
+  color: #63d471;
+}
+
+#status[data-state="requesting"],
+#status[data-state="waiting"] {
+  color: #e5c07b;
+}
+
+#status[data-state="hidden"],
+#status[data-state="ended"] {
+  color: #999;
+}
+
+#status[data-state="error"],
+#status[data-state="unsupported"] {
+  color: #e06c75;
+}
+
+.controls {
+  max-width: 720px;
+  padding: 16px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background: #202020;
+}
+
+.mode-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  margin-bottom: 16px;
+}
+
+.mode-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #ccc;
+  cursor: pointer;
+}
+
+.mode-option input {
+  margin: 0;
+  accent-color: #ddd;
+}
+
+#schedule-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(110px, 160px)) auto;
+  align-items: end;
+  gap: 12px;
+}
+
+.number-field {
+  display: grid;
+  gap: 6px;
+}
+
+.number-field label {
+  color: #999;
+  font-size: 13px;
+}
+
+.number-field input {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 1px solid #555;
+  border-radius: 5px;
+  outline: none;
+  background: #151515;
+  color: #eee;
+}
+
+.number-field input:focus {
+  border-color: #aaa;
+  box-shadow: 0 0 0 1px #aaa;
+}
+
+.number-field input:disabled {
+  border-color: #333;
+  background: #1a1a1a;
+  color: #666;
+  cursor: not-allowed;
+}
+
+#apply-schedule {
+  min-height: 40px;
+  padding: 8px 16px;
+  border: 1px solid #777;
+  border-radius: 5px;
+  background: #d8d8d8;
+  color: #111;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#apply-schedule:hover:not(:disabled) {
+  background: #f0f0f0;
+}
+
+#apply-schedule:active:not(:disabled) {
+  background: #bbb;
+}
+
+#apply-schedule:disabled {
+  border-color: #444;
+  background: #333;
+  color: #777;
+  cursor: not-allowed;
+}
+
+.schedule-info {
+  min-height: 22px;
+  margin: 14px 0 0;
+  color: #aaa;
+  line-height: 1.5;
+}
+
+.schedule-info strong {
+  color: #eee;
+  font-weight: 600;
+}
+
+.schedule-error {
+  min-height: 20px;
+  margin: 8px 0 0;
+  color: #ddd;
+  font-size: 13px;
+}
+
+main {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 16px 20px;
+  background: #181818cc;
+}
+
+#log {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+@media (max-width: 640px) {
+  header {
+    padding: 22px 20px;
+  }
+
+  #schedule-form {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  #apply-schedule {
+    grid-column: 1 / -1;
+  }
+}
