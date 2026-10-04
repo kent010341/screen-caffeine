@@ -30,7 +30,7 @@ h1 { margin: 0; text-align: center; color: var(--muted); font-size: 17px; font-w
 #status { margin: 0 0 16px; font-size: 21px; font-weight: 600; }
 .primary-instruction { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 0; color: #bbb; font-size: 15px; }
 .icon { display: inline-block; flex: 0 0 auto; width: 22px; height: 22px; background: currentColor; mask: var(--icon) center / contain no-repeat; -webkit-mask: var(--icon) center / contain no-repeat; }
-.icon-monitor { --icon: url("./assets/icons/monitor.svg"); }
+.icon-coffee { --icon: url("./assets/icons/coffee.svg"); }
 .icon-monitor-off { --icon: url("./assets/icons/monitor-off.svg"); }
 .icon-eye { --icon: url("./assets/icons/eye.svg"); }
 .icon-clock { --icon: url("./assets/icons/clock.svg"); }

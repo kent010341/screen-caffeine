@@ -24,7 +24,7 @@ let draftTouched = false;
 let visibilityVersion = 0;
 
 const statuses = {
-  active: ["Screen kept awake", "monitor"],
+  active: ["Screen caffeinated", "coffee"],
   requesting: ["Starting…", "clock"],
   waiting: ["Reconnecting…", "clock"],
   hidden: ["Paused", "monitor-off"],

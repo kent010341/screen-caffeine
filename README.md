@@ -2,7 +2,7 @@
 
 Open the page and keep it visible to keep your screen awake. No start button is needed. The page automatically requests a screen wake lock and retries when the browser releases it.
 
-The green monitor glow breathes only while a wake lock is active. Reduced-motion preferences replace the animation with a steady glow. Switching away changes the tab title to "Wake Lock inactive — Screen Caffeine"; returning restores the normal title immediately.
+The coffee icon and "Screen caffeinated" status indicate an active wake lock. Its green glow breathes only while the lock is active. Reduced-motion preferences replace the animation with a steady glow. Switching away changes the tab title to "Wake Lock inactive — Screen Caffeine"; returning restores the normal title immediately.
 
 ## Optional timer
 

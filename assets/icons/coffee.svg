@@ -1,5 +1,5 @@
 <!--
-Source: Lucide 500620a2e8123f8d1db191538886dc0c223f69a9, icons/monitor.svg
+Source: Lucide 500620a2e8123f8d1db191538886dc0c223f69a9, icons/coffee.svg
 ISC License
 
 Copyright (c) 2026 Lucide Icons and Contributors
@@ -56,7 +56,8 @@ SOFTWARE.
   stroke-linecap="round"
   stroke-linejoin="round"
 >
-  <rect width="20" height="14" x="2" y="3" rx="2" />
-  <line x1="8" x2="16" y1="21" y2="21" />
-  <line x1="12" x2="12" y1="17" y2="21" />
+  <path d="M10 2v2" />
+  <path d="M14 2v2" />
+  <path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1" />
+  <path d="M6 2v2" />
 </svg>
