@@ -67,97 +67,73 @@
 </head>
 
 <body>
-  <header>
-    <h1>Screen Caffeine</h1>
+  <main class="app">
+    <header><h1>Screen Caffeine</h1></header>
 
-    <p class="description">
-      Keep this page visible to prevent your screen from automatically
-      turning off or going to sleep. Use permanent mode, or set a duration
-      after which the wake lock will be released automatically.
-    </p>
+    <section id="wake-status" class="wake-status" data-state="requesting" aria-label="Screen status">
+      <div class="status-orb" aria-hidden="true">
+        <span id="status-icon" class="icon icon-monitor"></span>
+      </div>
+      <p id="status" role="status" aria-live="polite" aria-atomic="true">Starting…</p>
+      <p class="primary-instruction">
+        <span class="icon icon-eye" aria-hidden="true"></span>
+        Keep this page visible.
+      </p>
+    </section>
 
-    <div class="status-row">
-      <span class="status-label">Current status:</span>
-      <span id="status" data-state="waiting">Waiting</span>
-    </div>
-
-    <section class="controls" aria-label="Wake lock settings">
-      <div class="mode-options">
-        <label class="mode-option">
-          <input
-            id="permanent-mode"
-            type="radio"
-            name="lock-mode"
-            value="permanent"
-            checked
-          >
-          Permanent
-        </label>
-
-        <label class="mode-option">
-          <input
-            id="scheduled-mode"
-            type="radio"
-            name="lock-mode"
-            value="scheduled"
-          >
-          Scheduled
-        </label>
+    <section class="timer" aria-label="Optional timer">
+      <div class="timer-summary">
+        <p class="summary-text" role="status" aria-live="polite" aria-atomic="true">
+          <span class="icon icon-clock" aria-hidden="true"></span>
+          <span id="schedule-info">No time limit</span>
+        </p>
+        <span class="tool" id="cancel-control" hidden>
+          <button id="cancel-schedule" class="icon-button" type="button"
+            aria-label="Cancel timer" aria-describedby="cancel-tooltip">
+            <span class="icon icon-x" aria-hidden="true"></span>
+          </button>
+          <span id="cancel-tooltip" class="tooltip" role="tooltip">Cancel timer</span>
+        </span>
       </div>
 
-      <form id="schedule-form">
-        <div class="number-field">
-          <label for="duration-hours">Hours</label>
-          <input
-            id="duration-hours"
-            type="number"
-            min="0"
-            max="168"
-            step="1"
-            value="1"
-            disabled
-          >
-        </div>
+      <details id="timer-settings">
+        <summary aria-label="Set timer" aria-describedby="timer-tooltip">
+          <span class="icon icon-clock" aria-hidden="true"></span>
+          <span id="timer-tooltip" class="tooltip" role="tooltip">Set timer</span>
+        </summary>
+        <form id="schedule-form" novalidate>
+          <div class="number-field">
+            <label for="duration-hours">Hours</label>
+            <input id="duration-hours" type="number" min="0" max="168" step="1"
+              value="1" required aria-describedby="schedule-error">
+          </div>
+          <div class="number-field">
+            <label for="duration-minutes">Minutes</label>
+            <input id="duration-minutes" type="number" min="0" max="59" step="1"
+              value="0" required aria-describedby="schedule-error">
+          </div>
+          <span class="tool apply-control">
+            <button id="apply-schedule" class="icon-button" type="submit"
+              aria-label="Apply timer" aria-describedby="apply-tooltip schedule-pending">
+              <span class="icon icon-check" aria-hidden="true"></span>
+            </button>
+            <span id="apply-tooltip" class="tooltip" role="tooltip">Apply timer</span>
+          </span>
+        </form>
+      </details>
 
-        <div class="number-field">
-          <label for="duration-minutes">Minutes</label>
-          <input
-            id="duration-minutes"
-            type="number"
-            min="0"
-            max="59"
-            step="1"
-            value="0"
-            disabled
-          >
-        </div>
-
-        <button
-          id="apply-schedule"
-          type="submit"
-          disabled
-        >
-          Apply schedule
-        </button>
-      </form>
-
-      <p id="schedule-info" class="schedule-info">
-        Current mode: <strong>Permanent</strong>
+      <p id="schedule-pending" class="notice pending" role="status"
+        aria-live="polite" aria-atomic="true" hidden>
+        <span class="icon icon-triangle-alert" aria-hidden="true"></span>
+        <span id="pending-text"></span>
       </p>
-
-      <p
-        id="schedule-error"
-        class="schedule-error"
-        role="alert"
-        aria-live="polite"
-      ></p>
+      <p id="schedule-error" class="notice error" role="status"
+        aria-live="polite" aria-atomic="true" hidden>
+        <span class="icon icon-triangle-alert" aria-hidden="true"></span>
+        <span id="error-text"></span>
+      </p>
     </section>
-  </header>
-
-  <main id="log-container">
-    <pre id="log"></pre>
   </main>
-
   <script src="./script.js"></script>
 </body>
 </html>
