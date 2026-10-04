@@ -1,28 +1,5 @@
-# Screen Caffeine
-
-Open the page and keep it visible to keep your screen awake. No start button is needed. The page automatically requests a screen wake lock and retries when the browser releases it.
-
-The coffee icon and "Screen caffeinated" status indicate an active wake lock. Its green glow breathes only while the lock is active. Reduced-motion preferences replace the animation with a steady glow. Switching away changes the tab title to "Wake Lock inactive — Screen Caffeine"; returning restores the normal title immediately.
-
-## Optional timer
-
-Open the clock control, enter hours and minutes, and use the check button to apply the timer. Valid changes are highlighted until applied, including when the controls are collapsed. The summary always shows the setting currently in effect.
-
-Hours must be whole numbers from 0 to 168 and minutes from 0 to 59, with a total of at least one minute. The timer keeps running while the page is hidden. Once it ends, wake lock requests stop until another timer is applied or the timer is cancelled with the X button. Cancelling restores no time limit.
-
-## Browser requirements
-
-This project uses the [Screen Wake Lock API](https://developer.mozilla.org/en-US/docs/Web/API/Screen_Wake_Lock_API), which requires a secure context (HTTPS or localhost) and a visible document. Browser and operating system policies can prevent or release a wake lock. Technical diagnostics are available in the browser console.
-
-To preview locally, serve this directory with a static HTTP server on localhost. No build step or dependencies are required.
-
-## Third-party notices
-
-The individual SVG files in `assets/icons/` come from [Lucide](https://github.com/lucide-icons/lucide) at revision `500620a2e8123f8d1db191538886dc0c223f69a9`. They are used locally without a CDN or runtime library. Each SVG includes the complete upstream license, including the MIT terms for Feather-derived icons. The original source artwork is unchanged.
-
-The complete upstream license follows:
-
-```text
+<!--
+Source: Lucide 500620a2e8123f8d1db191538886dc0c223f69a9, icons/check.svg
 ISC License
 
 Copyright (c) 2026 Lucide Icons and Contributors
@@ -39,7 +16,7 @@ WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
----
+
 
 The following Lucide icons are derived from the Feather project:
 
@@ -66,4 +43,18 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-```
+
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M20 6 9 17l-5-5" />
+</svg>
