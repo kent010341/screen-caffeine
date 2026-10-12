@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <link
+        rel="icon"
+        href="./favicon.svg"
+        type="image/svg+xml"
+    >
+    <link
+        rel="stylesheet"
+        href="./styles.css"
+    >
+    <link
+        rel="stylesheet"
+        href="./mini.css"
+    >
+    <title>Screen Caffeine</title>
+    <script type="importmap">
+        { "imports": { "@screen-caffeine/": "./lib/" } }
+    </script>
+</head>
+<body class="mini-page">
+    <main class="mini-app">
+        <section
+            id="wake-status"
+            class="wake-status"
+            data-state="requesting"
+            aria-label="Screen status"
+        >
+            <div
+                class="status-orb"
+                aria-hidden="true"
+            >
+                <span
+                    id="status-icon"
+                    class="icon icon-clock"
+                ></span>
+            </div>
+            <p
+                id="status"
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+            >Starting…</p>
+        </section>
+        <p
+            id="schedule-info"
+            class="mini-summary"
+        >No time limit</p>
+        <a
+            id="open-full"
+            class="full-page-link"
+            href="./index.html"
+            target="_blank"
+            rel="noopener"
+        >Open full page</a>
+    </main>
+    <script
+        type="module"
+        src="./mini.js"
+    ></script>
+</body>
+</html>

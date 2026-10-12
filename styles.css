@@ -375,3 +375,27 @@ summary:focus-visible .tooltip {
         gap: 8px;
     }
 }
+
+.app-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 52px;
+}
+
+.mini-control {
+    position: absolute;
+    right: 0;
+}
+
+.mini-control .tooltip {
+    top: calc(100% + 9px);
+    bottom: auto;
+}
+
+.window-icon {
+    width: 22px;
+    height: 22px;
+}
