@@ -1,0 +1,61 @@
+.mini-page::before,
+.mini-page::after {
+    display: none;
+}
+
+.mini-app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100svh;
+    padding: 16px 12px 8px;
+    text-align: center;
+}
+
+.mini-app .wake-status {
+    width: 100%;
+    padding: 0;
+}
+
+.mini-app .status-orb {
+    width: 72px;
+    height: 72px;
+    margin-bottom: 12px;
+}
+
+.mini-app .status-orb .icon {
+    width: 34px;
+    height: 34px;
+}
+
+.mini-app .status-orb::before {
+    box-shadow: 0 0 24px 4px #83d99b;
+}
+
+.mini-app #status {
+    margin-bottom: 8px;
+    font-size: 15px;
+    line-height: 1.35;
+}
+
+.mini-summary {
+    margin: 0 0 4px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+}
+
+.full-page-link {
+    display: grid;
+    place-items: center;
+    min-height: 44px;
+    padding: 0 12px;
+    color: #bbb;
+    font-size: 12px;
+    text-underline-offset: 3px;
+}
+
+.full-page-link:hover {
+    color: #fff;
+}

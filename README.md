@@ -10,11 +10,31 @@ Open the clock control, enter hours and minutes, and use the check button to app
 
 Hours must be whole numbers from 0 to 168 and minutes from 0 to 59, with a total of at least one minute. The timer keeps running while the page is hidden. Once it ends, wake lock requests stop until another timer is applied or the timer is cancelled with the X button. Cancelling restores no time limit.
 
+## Mini window
+
+Use the window button beside the page title to open a dedicated compact interface. The requested content size is 280 × 240; browsers decide the actual size and may open a tab instead. Repeated clicks focus the same mini window. If opening is blocked, allow popups for this site and try again.
+
+The mini interface shows its own wake lock status and the remaining timer duration, with no background image or timer editor. Use **Open full page** to focus the original page, or open a replacement if it was closed.
+
+Both pages share a session identifier in the URL and synchronize only applied timer settings, including cancellation. Opening or reloading the mini window does not restart the timer. The mini window continues independently after the original page closes. A replacement full page restores the same applied settings. Unrelated sessions use separate storage keys.
+
+Each visible document acquires its own wake lock. Keep the mini window visible: minimizing it or hiding its document can release the lock. A normal popup cannot guarantee always-on-top behavior. Errors, unsupported browsers, and expired timers remain visible as text. Reduced-motion preferences also apply in the mini window.
+
+Settings are retained in same-origin local storage and updates are notified across windows. If storage is disabled, live synchronization may still work through BroadcastChannel, but restoring settings after all session windows close is unavailable. This feature requires browser ES modules and import maps; it needs no build step or dependencies.
+
 ## Browser requirements
 
 This project uses the [Screen Wake Lock API](https://developer.mozilla.org/en-US/docs/Web/API/Screen_Wake_Lock_API), which requires a secure context (HTTPS or localhost) and a visible document. Browser and operating system policies can prevent or release a wake lock. Technical diagnostics are available in the browser console.
 
 To preview locally, serve this directory with a static HTTP server on localhost. No build step or dependencies are required.
+
+## Development checks
+
+Shared browser modules live in `lib/`, with the `@screen-caffeine/` import-map alias used by both page entry scripts. Behavior tests use Node's built-in test runner and isolated browser mocks; no packages need to be installed.
+
+```sh
+node --experimental-vm-modules --test --test-isolation=none tests/behavior.test.mjs
+```
 
 ## Third-party notices
 
