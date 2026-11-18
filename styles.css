@@ -337,6 +337,10 @@ summary:focus-visible .tooltip {
     line-height: 1.6;
 }
 
+#close-hint {
+    color: var(--muted);
+}
+
 .notice .icon {
     width: 18px;
     height: 18px;

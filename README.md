@@ -14,6 +14,12 @@ Hours must be whole numbers from 0 to 168 and minutes from 0 to 59, with a total
 
 Use the window button beside the page title to open a dedicated compact interface. The requested content size is 280 × 240; browsers decide the actual size and may open a tab instead. Repeated clicks focus the same mini window. If opening is blocked, allow popups for this site and try again.
 
+The mini window opens at the bottom-left of the screen by default. Once it is open, the full page shows "Mini window is running. You can close this page."
+
+Add `?popup` to the URL to open the mini window as soon as the page loads (any value, or none, works). Browsers usually block popups that were not triggered by a click, so the first load may only show the blocked notice; allow popups for this site once, or click the window button.
+
+The window is requested at `left=0` with a very large `top` so the browser clamps it to the bottom-left of a screen. Which screen is browser behavior: Firefox uses the primary screen, Chrome and Edge keep it on the opener's screen.
+
 The mini interface shows its own wake lock status and the remaining timer duration, with no background image or timer editor. Use **Open full page** to focus the original page, or open a replacement if it was closed.
 
 Both pages share a session identifier in the URL and synchronize only applied timer settings, including cancellation. Opening or reloading the mini window does not restart the timer. The mini window continues independently after the original page closes. A replacement full page restores the same applied settings. Unrelated sessions use separate storage keys.

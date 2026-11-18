@@ -294,14 +294,67 @@ test('shared settings restore exact deadlines and synchronize cancellation throu
     assert.throws(() => session.apply({ deadline: 123, duration: { hours: 0, minutes: 0 } }), /Invalid/);
 });
 
-test('popup button reuses window and displays blockers without touching session settings', async () => {
+/**
+ * Build the page elements used by setupMiniButton.
+ * @param {object} env Navigation runtime.
+ * @returns {{button: EventTarget, notice: {hidden: boolean}, hint: {hidden: boolean}}} Fake elements.
+ */
+function miniElements(env) {
+    /** Button event target. */
+    const button = new EventTarget();
+    /** Popup failure feedback. */
+    const notice = { hidden: true };
+    /** Close hint. */
+    const hint = { hidden: true };
+    env.document.getElementById = id => ({ 'open-mini': button, 'popup-notice': notice, 'close-hint': hint })[id];
+    return { button, notice, hint };
+}
+
+test('popup param: presence requests auto-open regardless of value', async () => {
     /** Navigation runtime. */
     const env = await environment('window-navigation.js');
-    /** Button event target and independently controlled feedback. */
-    const button = new EventTarget();
-    /** Popup feedback visibility. */
-    const notice = { hidden: true };
-    env.document.getElementById = id => id === 'open-mini' ? button : notice;
+    /** @param {string} query Query string. @returns {boolean} Parsed request. */
+    const parse = query => env.exports.isPopupRequested('https://example.test/app/' + query);
+    assert.equal(parse(''), false);
+    assert.equal(parse('?session=x'), false);
+    assert.equal(parse('?popup'), true);
+    assert.equal(parse('?popup='), true);
+    assert.equal(parse('?popup=anything'), true);
+});
+
+test('?popup auto-opens at bottom-left via clamped coordinates; blocked auto-open shows notice only', async () => {
+    /** Runtime loaded with an auto-open request. */
+    const env = await environment('window-navigation.js', { url: 'https://example.test/app/?popup' });
+    /** Fake page elements. */
+    const { notice, hint } = miniElements(env);
+    /** Captured open calls. */
+    const calls = [];
+    env.window.open = (...args) => {
+        calls.push(args);
+        return { closed: false, focus() {
+        } };
+    };
+    env.exports.setupMiniButton({ id: 'example' });
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0][2], 'popup,width=280,height=240,left=0,top=99999');
+    assert.equal(hint.hidden, false);
+    assert.equal(notice.hidden, true);
+
+    /** Runtime where the popup blocker rejects the automatic open. */
+    const blocked = await environment('window-navigation.js', { url: 'https://example.test/app/?popup' });
+    /** Fake page elements. */
+    const second = miniElements(blocked);
+    blocked.window.open = () => null;
+    blocked.exports.setupMiniButton({ id: 'example' });
+    assert.equal(second.notice.hidden, false);
+    assert.equal(second.hint.hidden, true);
+});
+
+test('popup button reuses window, shows close hint, and displays blockers without touching session settings', async () => {
+    /** Navigation runtime. */
+    const env = await environment('window-navigation.js');
+    /** Fake page elements. */
+    const { button, notice, hint } = miniElements(env);
     /** Captured open calls and focus count. */
     const calls = [];
     /** Reusable mini window. */
@@ -316,15 +369,21 @@ test('popup button reuses window and displays blockers without touching session 
         return popup;
     };
     env.exports.setupMiniButton({ id: 'example' });
+    assert.equal(calls.length, 0);
+    assert.equal(hint.hidden, true);
     button.dispatchEvent(new Event('click'));
     button.dispatchEvent(new Event('click'));
     assert.equal(calls.length, 1);
     assert.match(calls[0][0].href, /mini.html\?session=example$/);
-    assert.equal(calls[0][2], 'popup,width=280,height=240');
+    assert.equal(calls[0][2], 'popup,width=280,height=240,left=0,top=99999');
+    assert.equal(hint.hidden, false);
     popup.closed = true;
+    await env.advance(1000);
+    assert.equal(hint.hidden, true);
     env.window.open = () => null;
     button.dispatchEvent(new Event('click'));
     assert.equal(notice.hidden, false);
+    assert.equal(hint.hidden, true);
 });
 
 test('return link focuses a matching opener and falls back after closure', async () => {
